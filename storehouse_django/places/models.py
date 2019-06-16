@@ -14,13 +14,15 @@ class PlacesBaseModel(models.Model):
 
 class StoragePlace(PlacesBaseModel):
     
-    humanid = models.CharField(max_length=5) # Поставить уникальный
+    humanid = models.CharField(max_length=5, unique=True) 
 
     place = models.ForeignKey(
         'self',
         unique=False,
         related_name="inside_places",
         on_delete=models.CASCADE,
+        blank=True,
+        null=True,
     )
 
 
@@ -43,7 +45,7 @@ class StoragePlace(PlacesBaseModel):
 
 class Formfactor(PlacesBaseModel):
 
-    humanid = models.IntegerField() # Поставить уникальный
+    humanid = models.IntegerField(unique=True) # Поставить уникальный
 
     outside_height =  models.IntegerField(blank=True, null=True)
     outside_width =  models.IntegerField(blank=True, null=True)
@@ -60,7 +62,7 @@ class Formfactor(PlacesBaseModel):
 
 class OpeningType(PlacesBaseModel):
     
-    humanid = models.CharField(max_length=1) # Поставить уникальный
+    humanid = models.CharField(max_length=1, unique=True) # Поставить уникальный
     
     def __str__(self):
         return "humanid='%s',comment='%s'" % (self.humanid, self.comment)

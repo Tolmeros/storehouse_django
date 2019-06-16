@@ -19,6 +19,8 @@ class Item(ItemsBaseModel):
         unique=False,
         related_name="items",
         on_delete=models.CASCADE,
+        blank=True,
+        null=True,
     )
 
     def __str__(self):
