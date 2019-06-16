@@ -55,6 +55,14 @@ class StoragePlace(PlacesBaseModel):
             self.comment
         )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['humanid', 'opening_type', 'formfactor'],
+                name='full_humanid'
+            )
+        ]
+
 class Formfactor(PlacesBaseModel):
 
     humanid = models.IntegerField(unique=True) # Поставить уникальный
