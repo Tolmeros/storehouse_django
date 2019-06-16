@@ -12,7 +12,12 @@ class ItemsBaseModel(models.Model):
         abstract=True
 
 class Item(ItemsBaseModel):
-    humanid = models.CharField(max_length=50) # Поставить уникальный
+    humanid = models.CharField(
+        max_length=50,
+        unique=True,
+        blank=True,
+        null=True,
+    )
 
     place = models.ForeignKey(
         StoragePlace,
