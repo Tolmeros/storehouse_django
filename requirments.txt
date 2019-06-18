@@ -2,6 +2,7 @@ django>=2.2,<2.3
 django-rest-auth
 djangorestframework>=3.9,<4.0
 djangorestframework-jwt
+django-filter
 
 Pillow
 coreapi
