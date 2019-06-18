@@ -19,6 +19,25 @@ router.register(
     base_name='formfactor'
 )
 
+router.register(
+    r'openingtype',
+    views.OpeningTypeViewSet,
+    base_name='openingtype'
+)
+
+router.register(
+    r'storageslace',
+    views.StoragePlaceViewSet,
+    base_name='storageslace'
+)
+
+router.register(
+    r'item',
+    views.ItemViewSet,
+    base_name='item'
+)
+
+
 
 #urlpatterns = router.urls
 
@@ -31,7 +50,7 @@ urlpatterns += [
 urlpatterns += [
     path('rest-auth/', include('rest_auth.urls')),
     #path('rest-auth/registration/', include('rest_auth.registration.urls')),
-    #path('rest-auth/token-refresh/', refresh_jwt_token),
+    path('rest-auth/token-refresh/', refresh_jwt_token),
 ]
 
 

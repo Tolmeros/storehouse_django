@@ -23,3 +23,33 @@ class FormfactorViewSet(viewsets.ModelViewSet):
     filter_fields = __basic_fields
     search_fields = __basic_fields
 
+
+class OpeningTypeViewSet(viewsets.ModelViewSet):
+    __basic_fields = ('humanid', )
+    serializer_class = serializers.OpeningTypeSerializer
+    queryset = serializers.places_models.OpeningType.objects.all()
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_fields = __basic_fields
+    search_fields = __basic_fields
+
+
+class StoragePlaceViewSet(viewsets.ModelViewSet):
+    #__basic_fields = ('humanid', 'full_humanid')
+    __basic_fields = ('humanid', )
+    serializer_class = serializers.StoragePlaceSerializer
+    queryset = serializers.places_models.StoragePlace.objects.all()
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_fields = __basic_fields
+    search_fields = __basic_fields
+
+class ItemViewSet(viewsets.ModelViewSet):
+    __basic_fields = ('humanid', 'comment')
+    serializer_class = serializers.ItemSerializer 
+    queryset = serializers.items_models.Item.objects.all()
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_fields = __basic_fields
+    search_fields = __basic_fields
+
