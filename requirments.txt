@@ -3,6 +3,9 @@ django-rest-auth
 djangorestframework>=3.9,<4.0
 djangorestframework-jwt
 django-filter
+django-excel
+
+pyexcel-ods
 
 Pillow
 coreapi

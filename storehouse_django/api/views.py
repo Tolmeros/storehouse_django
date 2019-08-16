@@ -53,3 +53,13 @@ class ItemViewSet(viewsets.ModelViewSet):
     filter_fields = __basic_fields
     search_fields = __basic_fields
 
+
+class ItemTypeViewSet(viewsets.ModelViewSet):
+    __basic_fields = ('name', 'comment')
+    serializer_class = serializers.ItemTypeSerializer 
+    queryset = serializers.items_models.ItemType.objects.all()
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_fields = __basic_fields
+    search_fields = __basic_fields    
+

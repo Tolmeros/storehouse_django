@@ -1,5 +1,8 @@
 flake8
 ipython
 django-extensions
+pyparsing
+pydot
+django-dia
 coreapi-cli
-
+django-cors-headers

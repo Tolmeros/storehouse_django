@@ -35,4 +35,10 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ItemTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        depth = 1
+        model = items_models.ItemType
+        fields = '__all__'
+
 
