@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'places',
     'items',
     'api',
-    'import_export',
 
 
 ]
