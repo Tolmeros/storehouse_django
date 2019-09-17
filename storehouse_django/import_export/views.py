@@ -1,35 +1,53 @@
 from django.shortcuts import render
+import django_excel as excel # without this does not work %)
+import pyexcel as pe
+from pyexcel_webio import make_response
 
-
-from django.http import HttpResponseBadRequest
-import django_excel as excel
-
-# Create your views here.
+from places import models as places_models
 
 
 def export_data(request, atype):
-    if atype == "all":
-        pass
+    model = places_models.StoragePlace
+    '''
+    StoragePlace.objects.all()[0].opening_type.humanid
+    StoragePlace.objects.all()[0].formfactor.humanid
+    StoragePlace.objects.all()[0].humanid - пробовать разложить на "серия" и "номер"
+    StoragePlace.objects.all()[0].full_humanid
+    StoragePlace.objects.all()[0].comment
 
+    StoragePlace.objects.all()[0].place
+    StoragePlace.objects.all()[0].inside_places.all()
     '''
-    if atype == "sheet":
-        return excel.make_response_from_a_table(
-            Question, 'xls', file_name="sheet")
-    elif atype == "book":
-        return excel.make_response_from_tables(
-            [Question, Choice], 'xls', file_name="book")
-    elif atype == "custom":
-        question = Question.objects.get(slug='ide')
-        query_sets = Choice.objects.filter(question=question)
-        column_names = ['choice_text', 'id', 'votes']
-        return excel.make_response_from_query_sets(
-            query_sets,
-            column_names,
-            'xls',
-            file_name="custom"
-        )
-    '''
-    else:
-        return HttpResponseBadRequest(
-            "Bad request. please put one of these " +
-            "in your url suffix: sheet, book or custom")
+
+    first_row = [
+        'Код',
+        'Цвет (заменить на фактура или подходящее',
+        'Внутри в',
+        'Комментарий',
+        '',
+        '',
+        'Тип открытия',
+        'Типоразмер',
+        'Серия,Номер',
+    ]
+    
+    sheet = pe.Sheet()
+    sheet.row += first_row
+    sheet.row += []
+
+    for place in model.objects.all():
+        parent = ''
+        if place.place:
+            parent = place.place.full_humanid
+
+        sheet.row += [
+            place.full_humanid,
+            '',
+            parent,
+            place.comment,
+            place.opening_type.humanid,
+            place.formfactor.humanid,
+            place.humanid,
+        ]
+
+    return make_response(sheet, 'ods', status=200, file_name='sheet')
