@@ -4,6 +4,7 @@ import pyexcel as pe
 from pyexcel_webio import make_response
 
 from places import models as places_models
+from items import models as items_models
 
 def make_places_sheet(model):
     first_row = [
@@ -112,11 +113,58 @@ def make_formfactros_sheet(model):
 
     return sheet
 
+def make_items_sheet(model):
+    first_row = [
+        'Код',
+        'Комментарий',
+        '',
+        'Имя',
+        'tsubtype',
+        'itcomment',
+        '',
+        'Количество',
+        'Место',
+
+
+    ]
+    
+    sheet = pe.Sheet()
+    sheet.name = 'Предметы'
+    sheet.row += first_row
+    sheet.row += ['']
+
+    for item in model.objects.all():
+        if item.itemtype:
+            name = item.itemtype.name
+            tsubtype = item.itemtype.tsubtype
+            itcomment = item.itemtype.comment
+        else:
+            name = 'n/a'
+            tsubtype = 'n/a'
+            itcomment = 'n/a'
+            
+
+        sheet.row += [
+            item.humanid,
+            item.comment,
+            '',
+            name,
+            tsubtype,
+            itcomment,
+            '',
+            item.count,
+            item.place.full_humanid,
+
+        ]
+
+    return sheet
+
 def export_data(request, atype):
     places = make_places_sheet(places_models.StoragePlace)
     opening_types = make_opening_types_sheet(places_models.OpeningType)
     formfactros = make_formfactros_sheet(places_models.Formfactor)
+    items = make_items_sheet(items_models.Item)
 
-    book = places + opening_types + formfactros
+    book = places + opening_types + formfactros + items
 
     return make_response(book, 'ods', status=200, file_name='sheet')
