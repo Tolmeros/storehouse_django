@@ -12,8 +12,22 @@ class PlacesBaseModel(models.Model):
     class Meta:
         abstract=True
 
-class StoragePlace(PlacesBaseModel):
-    
+class VolumesBaseModel(models.Model):
+
+    outside_height =  models.IntegerField(blank=True, null=True)
+    outside_width =  models.IntegerField(blank=True, null=True)
+    outside_depth =  models.IntegerField(blank=True, null=True)
+    inside_height =  models.IntegerField(blank=True, null=True)
+    inside_width =  models.IntegerField(blank=True, null=True)
+    inside_depth =  models.IntegerField(blank=True, null=True)
+    empty_weight =  models.IntegerField(blank=True, null=True)
+    contents_weight_max =  models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        abstract=True
+
+class StoragePlace(VolumesBaseModel, PlacesBaseModel):
+
     humanid = models.CharField(max_length=5, unique=False) 
 
     place = models.ForeignKey(
@@ -46,7 +60,29 @@ class StoragePlace(PlacesBaseModel):
                              self.formfactor.humanid, self.humanid)
     # Сделать что бы можно было писать и оно раскладывало на 
     # opening_type, formfactor и humanid
-    
+
+    @property
+    def used_volume(self):
+        volume = 0
+        for place in self.inside_places.all():
+            if place.formfactor.outside_volume:
+                volume += place.formfactor.outside_volume
+
+        return volume
+
+    @property
+    def volume(self):
+        if self.formfactor.inside_volume:
+            return self.formfactor.inside_volume
+        else:
+            return self.formfactor.outside_volume
+
+    @property
+    def free_volume(self):
+        if self.volume:
+            return self.volume - self.used_volume
+        else:
+            return None
 
     def __str__(self):
         return "full_humanid='%s',humanid='%s', comment='%s'" % (
@@ -63,36 +99,31 @@ class StoragePlace(PlacesBaseModel):
             )
         ]
 
-class Formfactor(PlacesBaseModel):
+class Formfactor(PlacesBaseModel, VolumesBaseModel):
 
     humanid = models.IntegerField(unique=True) # Поставить уникальный
-
-    outside_height =  models.IntegerField(blank=True, null=True)
-    outside_width =  models.IntegerField(blank=True, null=True)
-    outside_depth =  models.IntegerField(blank=True, null=True)
-    inside_height =  models.IntegerField(blank=True, null=True)
-    inside_width =  models.IntegerField(blank=True, null=True)
-    inside_depth =  models.IntegerField(blank=True, null=True)
-    empty_weight =  models.IntegerField(blank=True, null=True)
-    contents_weight_max =  models.IntegerField(blank=True, null=True)
 
     @property
     def outside_volume(self):
         if self.outside_height and self.outside_width and self.outside_depth:
             return self.outside_height * self.outside_width * self.outside_depth
+        else:
+            return None
 
     @property
     def inside_volume(self):
         if self.inside_height and self.inside_width and self.inside_depth:
             return self.inside_height * self.inside_width * self.inside_depth
+        else:
+            return None
 
     def __str__(self):
         return "humanid=%d,comment='%s'" % (self.humanid, self.comment)
 
 
 class OpeningType(PlacesBaseModel):
-    
+
     humanid = models.CharField(max_length=1, unique=True) # Поставить уникальный
-    
+
     def __str__(self):
         return "humanid='%s',comment='%s'" % (self.humanid, self.comment)

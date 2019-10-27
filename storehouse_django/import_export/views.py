@@ -17,8 +17,12 @@ def make_places_sheet(model):
         'Тип открытия',
         'Типоразмер',
         'Серия,Номер',
+        '',
+        'Объём',
+        'Использованный объём',
+        'Свободный объём',
     ]
-    
+
     sheet = pe.Sheet()
     sheet.name = 'Места'
     sheet.row += first_row
@@ -39,6 +43,10 @@ def make_places_sheet(model):
             place.opening_type.humanid,
             place.formfactor.humanid,
             place.humanid,
+            '',
+            place.volume,
+            place.used_volume,
+            place.free_volume,
         ]
 
     return sheet
@@ -48,14 +56,13 @@ def make_opening_types_sheet(model):
         'Код',
         'Комментарий',
     ]
-    
+
     sheet = pe.Sheet()
     sheet.name = 'Типы открытия'
     sheet.row += first_row
     sheet.row += ['']
 
     for place in model.objects.all().order_by('humanid'):
-
 
         sheet.row += [
             place.humanid,
@@ -83,14 +90,13 @@ def make_formfactros_sheet(model):
         'Внешний объём',
         'Внутренний объём',
     ]
-    
+
     sheet = pe.Sheet()
     sheet.name = 'Типоразмеры'
     sheet.row += first_row
     sheet.row += ['']
 
     for place in model.objects.all().order_by('humanid'):
-
 
         sheet.row += [
             str(place.humanid),
@@ -127,7 +133,7 @@ def make_items_sheet(model):
 
 
     ]
-    
+
     sheet = pe.Sheet()
     sheet.name = 'Предметы'
     sheet.row += first_row

@@ -16,7 +16,7 @@ class ItemInline(admin.TabularInline):
 
 @admin.register(StoragePlace)
 class StoragePlaceAdmin(admin.ModelAdmin):
-    readonly_fields = ('full_humanid',)
+    readonly_fields = ('full_humanid', 'volume', 'free_volume', 'used_volume')
 
     inlines = [
         StoragePlaceInline,
